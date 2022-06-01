@@ -2,7 +2,7 @@
 
 <img src="assets/doodle-classifier-app-logos.jpeg" alt="drawing" width="400"/> <br />
 
-# Song-stats
+# Doodle-classifier-app
 
 ![Badge](https://img.shields.io/github/languages/code-size/bryanlusse/doodle-classifier-app)
 ![Badge](https://img.shields.io/github/languages/count/bryanlusse/doodle-classifier-app)
