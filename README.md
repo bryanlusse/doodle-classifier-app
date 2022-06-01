@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+<div align="center">
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img src="assets/doodle-classifier-app-logos.jpeg" alt="drawing" width="400"/> <br />
 
-## Available Scripts
+# Song-stats
 
-In the project directory, you can run:
+![Badge](https://img.shields.io/github/languages/code-size/bryanlusse/doodle-classifier-app)
+![Badge](https://img.shields.io/github/languages/count/bryanlusse/doodle-classifier-app)
+![Badge](https://img.shields.io/github/last-commit/bryanlusse/doodle-classifier-app)
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+[Overview](#scroll-overview)
+•
+[Screenshots](#rice_scene-screenshot)
+•
+[URL](#computer-url)
+<!-- [Blogpost](https://medium.com/@blusse7/deploying-a-chatbot-on-heroku-using-flask-and-huggingface-7dadb77d8f48) -->
+</div>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## :bookmark_tabs: Menu
 
-### `npm test`
+- [Overview](#scroll-overview)
+- [Screenshots](#rice_scene-screenshot)
+- [URL](#computer-url)
+- [Requirements](#exclamation-requirements)
+- [Folder Structure](#open_file_folder-folder-structure)
+- [Author](#smiley_cat-author)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## :scroll: Overview
 
-### `npm run build`
+This web app enables users to draw doodles depending on a given prompt. A [deep learning algorithm](https://github.com/bryanlusse/doodle-classifier) predicts the class of the doodle while drawing. The aim of the game is to let the model correctly guess all drawings.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+At the moment, 10 classes are supported. The prompt given for the drawings are therefore randomly drawn from these classes. The classes are: 'banana', 'calculator', 'cat', 'fish', 'hamburger', 'headphones', 'house', 'house plant', 'mushroom' and 'windmill'.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Later updates will use more classes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## :rice_scene: Screenshots
+Home screen:
+![Logo](assets/screenshot1.png)
+Drawing:
+![Logo](assets/screenshot2.png)
+Drawings are shown at the end, and there is the option to play again.
+![Logo](assets/screenshot3.png)
 
-### `npm run eject`
+## :computer: URL
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+https://doodle-classifier-350707.web.app/
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## :exclamation: Requirements
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- [React](https://reactjs.org/)
+- [Google Cloud Platform](https://cloud.google.com/gcp/)
+- [Firebase](https://firebase.google.com/)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## :open_file_folder: Folder Structure
 
-## Learn More
+```
+.
+├── package.json
+├── package-lock.json
+├── firebase.json
+├── src                 # Folder with all web elements
+│   ├── components
+│   ├── context
+│   ├── style
+│   ├── typography
+│   ├── Utils
+│   ├── App.js
+│   └── index.js
+├── public
+│   ├── index.html              
+│   └── favicon.ico               
+├── assets               # Images for the README
+│   ├── logo.jpg
+│   └── screenshot.png
+└── README.md
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## :smiley_cat: Author
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- [@bryanlusse](https://github.com/bryanlusse)
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Made with &nbsp;❤️&nbsp;
