@@ -42,11 +42,13 @@ var shuffledClassNames = shuffle(classNames);
 
 const Hero = () => {
   // Inits for objects
+  // eslint-disable-next-line no-unused-vars
   const [isDesktop, setIsDesktop] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [isMobile, setIsMobile] = useState(false);
   const getPrompt = document.getElementById('getPrompt');
   const chatbox = document.getElementById('chatbox');
-  const dropdown = document.getElementsByClassName('dropdown')[0];
+  const dropdown = document.getElementById('dropdown');
   const finalDropdown = document.getElementById('finalDropdown');
   const showPrompt = document.getElementById("showPrompt");
   const progress = document.getElementById("progress");
@@ -76,7 +78,9 @@ const Hero = () => {
 
   // inits for variables
   const finAmount = 3;
+  // eslint-disable-next-line no-unused-vars
   var reset = "false";
+  // eslint-disable-next-line no-unused-vars
   var mode = "";
   var rndPrompt = '';
   var intervalId = null;
@@ -359,8 +363,8 @@ const Hero = () => {
   return (
     <section id="Hero" style={{height: "100vh"}}>
       <Container style={{display: "flex", height: "100vh", justifyContent: "center", alignItems: "center"}}>
-        <div className="dropdown" style={{display: "none", flexDirection: "column"}}>
-          <h1 id = "progress" style={{fontSize: "1.5em", fontWeight: "lighter"}}></h1>
+        <div id = "dropdown" className="dropdown" style={{display: "none", flexDirection: "column"}}>
+          <h1 id = "progress" style={{fontSize: "1.5em", fontWeight: "lighter"}}>Placeholder</h1>
           <h1 style={{fontSize: "2em"}}> You need to draw </h1>
           <div id="showPrompt" style={{margin: "20px", marginBottom: "80px", fontSize: "5em"}}></div>
           <button id="draw" className="cta-btn cta-btn--hero-black" onClick={startDrawing}>

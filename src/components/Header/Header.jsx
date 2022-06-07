@@ -2,8 +2,6 @@ import React from 'react';
 import Image from "../Imgs/DOODLE_CLASSIFIER-logo.png";
 import CountDownTimer from "../Utils/countdown"
 
-let remainingPathColor = "green";
-
 const Header = () => {
 
   return (
