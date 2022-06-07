@@ -30,6 +30,8 @@
 
 This web app enables users to draw doodles depending on a given prompt. A [deep learning algorithm](https://github.com/bryanlusse/doodle-classifier) predicts the class of the doodle while drawing. The aim of the game is to let the model correctly guess all drawings.
 
+This project was inspired by [Quick, Draw!](https://quickdraw.withgoogle.com/), the doodling game by Google.
+
 At the moment, 10 classes are supported. The prompt given for the drawings are therefore randomly drawn from these classes. The classes are: 'banana', 'calculator', 'cat', 'fish', 'hamburger', 'headphones', 'house', 'house plant', 'mushroom' and 'windmill'.
 
 UPDATE 07-06-2022:
