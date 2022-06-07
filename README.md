@@ -4,10 +4,11 @@
 
 # Doodle-classifier-app
 
-![Badge](https://img.shields.io/github/languages/code-size/bryanlusse/doodle-classifier-app)
 ![Badge](https://img.shields.io/github/languages/count/bryanlusse/doodle-classifier-app)
+![Badge](https://github.com/bryanlusse/doodle-classifier-app/actions/workflows/node.js.yml/badge.svg)
+![Badge](https://img.shields.io/codecov/c/github/bryanlusse/doodle-classifier-app)
 ![Badge](https://img.shields.io/github/last-commit/bryanlusse/doodle-classifier-app)
-
+![Badge](https://img.shields.io/github/languages/code-size/bryanlusse/doodle-classifier-app)
 
 [Overview](#scroll-overview)
 •
