@@ -1,26 +1,47 @@
 import React, {useState, useEffect} from 'react';
-// import {keepTheme, setTheme} from '../../utils/themes';
 import {Container} from 'react-bootstrap';
 import {init, clearCanvas} from '../Canvas/Canvas';
 import axios from 'axios';
 import Chatbox from '../Chatbox/Chatbox';
-import {delay, argMax, RGBtoGray, createGroups, shuffle} from '../Utils/Utils';
+import {delay, getIndex, RGBtoGray, createGroups, shuffle} from '../Utils/Utils';
 import {fireConfetti} from '../Utils/confetti';
+import stampSrc from "../Imgs/stamp.png";
 
-const classNames = ['banana',
-  'calculator',
-  'cat',
-  'fish',
-  'hamburger',
-  'headphones',
-  'house',
-  'house plant',
-  'mushroom',
-  'windmill'];
+const classNames = ['an apple',
+                    'a banana',
+                    'a basketball',
+                    'a cake',
+                    'a calculator',
+                    'a cat',
+                    'a chair',
+                    'a computer',
+                    'a cookie',
+                    'a crab',
+                    'an eye',
+                    'a fish',
+                    'a flower',
+                    'a hamburger',
+                    'a hat',
+                    'a pair of headphones',
+                    'a hockey stick',
+                    'an hourglass',
+                    'a house',
+                    'a house plant',
+                    'a mushroom',
+                    'a palm tree',
+                    'a pizza',
+                    'a potato',
+                    'a rainbow',
+                    'a spider',
+                    'a sword',
+                    'a syringe',
+                    'a t-shirt',
+                    'a windmill'];
 
 var shuffledClassNames = shuffle(classNames);
 
 const Hero = () => {
+  // Inits for objects
   const [isDesktop, setIsDesktop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const getPrompt = document.getElementById('getPrompt');
@@ -31,6 +52,8 @@ const Hero = () => {
   const progress = document.getElementById("progress");
   const srcCanvas = document.getElementById('Canvas');
   const newCanvas = document.createElement("canvas");
+  newCanvas.width = 504;
+  newCanvas.height = 504;
   const timer = document.getElementById('countdownTimer');
   const finalScore = document.getElementById("finalScore");
   const clearButton = document.getElementById("clear");
@@ -51,21 +74,17 @@ const Hero = () => {
   const result3 = document.getElementById("result3");
   const results = [result1, result2, result3];
 
+  // inits for variables
   const finAmount = 3;
   var reset = "false";
   var mode = "";
-  newCanvas.width = 504;
-  newCanvas.height = 504;
   var rndPrompt = '';
   var intervalId = null;
   var countdownId = null;
   var doodleNr = 0;
   var correctNr = 0;
   var gameNr = 0;
-
-  // useEffect(() => {
-  //   keepTheme();
-  // })
+  var prevGuess = '';
 
   useEffect(() => {
     if (window.innerWidth > 769) {
@@ -78,7 +97,9 @@ const Hero = () => {
   }, []);
 
   function givePrompt(reset="false") {
+    // Get the random drawing prompt and serve it to the user in the dropdown
     if (reset === "true") {
+      // Reset all variables when player chooses to start a new game
       doodleNr = 0;
       correctNr = 0;
       gameNr += 1;
@@ -100,6 +121,7 @@ const Hero = () => {
   }
 
   function startDrawing() {
+    // Initializes drawing screen and canvas, and starts countdown and predictions
     const context = srcCanvas.getContext('2d');
 
     dropdown.className = "dropup";
@@ -124,6 +146,7 @@ const Hero = () => {
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
       if (distance < 0) {
+        // When time runs out, reset everything and give next prompt
         clearInterval(countdown);
         clearInterval(intervalId);
         resetTimer();
@@ -131,6 +154,7 @@ const Hero = () => {
         saveDrawing(mode="xmark");
 
         doodleNr += 1;
+        prevGuess = '';
         if (doodleNr===finAmount) {
           giveFinalScreen();
         }
@@ -141,6 +165,7 @@ const Hero = () => {
         clearCanvas();
       }
       else {
+        // Code for countdown timer look
         if (seconds < 10) {
           document.getElementById("timeRemaining").innerHTML = "0:0" + seconds;
         }
@@ -166,6 +191,8 @@ const Hero = () => {
   }
 
   const prediction = async(e) => {
+    // Retrieve drawing from canvas and send it to the AI model to make a prediction. 
+    // Fetch prediction and check if prediction is correct
     var destCanvas = document.createElement("canvas");
     destCanvas.width = 504;
     destCanvas.height = 504;
@@ -174,10 +201,10 @@ const Hero = () => {
 
     var imageData = srcContext.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
     
-    newCanvas.getContext("2d").putImageData(imageData, 0, 0); // newCanvas gets updated
-    destContext.scale(0.0555555, 0.0555555);
-    destContext.drawImage(newCanvas, 0, 0); // But destContext doesn't update
-
+    newCanvas.getContext("2d").putImageData(imageData, 0, 0); 
+    destContext.scale(0.0555555, 0.0555555); // Scale data down to correct size for model.
+    destContext.drawImage(newCanvas, 0, 0); 
+    
     var scaledImg = destContext.getImageData(0, 0, 28, 28).data;
     var gray = RGBtoGray(scaledImg);
     var result = createGroups(createGroups(gray, 784), 28);
@@ -187,9 +214,9 @@ const Hero = () => {
     if (gray.reduce((partialSum, a) => partialSum + a, 0) !== (255*28*28)) { // Check if drawing has started
       axios({
         method: 'post',
-        url: 'https://us-central1-doodle-classifier-350707.cloudfunctions.net/doodle-prediction',
+        url: 'URL',
         data: {
-          model_path: "projects/doodle-classifier-350707/models/doodle_classifier",
+          model_path: "projects/doodle-classifier-350707/models/doodle_classifier/versions/V2",
           instances: [result]
         },
         config: {
@@ -197,7 +224,8 @@ const Hero = () => {
         }
       })
       .then((response) => {
-        var predictions = response.data.prediction[0]
+        // Retrieve predictions
+        var predictions = response.data.prediction[0];
         var score = [];
         for (let i = 0; i < predictions.length; i++) {
           score.push(Math.tanh(predictions[i]));
@@ -206,10 +234,18 @@ const Hero = () => {
         const bubble = document.createElement('div');
         const incoming = document.getElementsByClassName("incoming")[0];
         bubble.className = "bubble";
+        var currGuess = classNames[getIndex(score)];
 
-        if (classNames[argMax(score)]===rndPrompt) {
-          bubble.innerHTML = "Oh, I know. This is a " + classNames[argMax(score)];
+        if (prevGuess===currGuess) {
+          // Code to allow model to guess a different drawing if guess stays the same
+          currGuess = classNames[getIndex(score, 'secondBiggest')]; 
+        }
+
+        if (currGuess===rndPrompt) {
+          // When model guesses correctly
+          bubble.innerHTML = "Oh, I know. This is " + currGuess;
           incoming.appendChild(bubble);
+
           fireConfetti();
           clearInterval(intervalId);
           clearInterval(countdownId);
@@ -220,12 +256,14 @@ const Hero = () => {
 
           doodleNr += 1;
           correctNr += 1;
+          prevGuess = '';
           setTimeout(() => {
             if (doodleNr===3) {
+              // Round is over, show scores:
               giveFinalScreen();
-              // More stuff for after finishing
             }
             else {
+              // Continue the round
               givePrompt();
             }
             resetChatbox();
@@ -233,8 +271,10 @@ const Hero = () => {
           }, 3000);
         }
         else {
-          bubble.innerHTML = "Is it a " + classNames[argMax(score)] + "?";
+          // Wrong guess
+          bubble.innerHTML = "Is it " + currGuess + "?";
           incoming.appendChild(bubble);
+          prevGuess = currGuess;
         };
       })
       .catch((error) => {
@@ -244,6 +284,7 @@ const Hero = () => {
   };
 
   function resetTimer() {
+    // Reset colour and time on countdown timer
     document.getElementById("base-timer-path-remaining").classList.remove("red");
     document.getElementById("base-timer-path-remaining").classList.remove("orange");
     document.getElementById("base-timer-path-remaining").classList.add("green");   
@@ -252,6 +293,7 @@ const Hero = () => {
   };
 
   function resetChatbox() {
+    // Clears guesses from model and reinitializes the first message
     const bubbleInit = document.createElement('div');
     const incoming = document.getElementsByClassName("incoming")[0];
     bubbleInit.className = "bubble";
@@ -260,6 +302,7 @@ const Hero = () => {
   };
 
   function saveDrawing(mode) {
+    // Save drawing in canvas to show at the end of the round
     var can = fincan[doodleNr];
     if (gameNr===0) {
       can.getContext('2d').scale(0.5, 0.5);
@@ -275,12 +318,43 @@ const Hero = () => {
   };
 
   function giveFinalScreen() {
+    // Give final screen with score overview and saved drawings
     finalScore.innerHTML = "Our neural network figured out " + correctNr + " of your " + finAmount + " drawings"; // Input final score
 
     finalDropdown.className = "dropdown";
     finalDropdown.style.display = "flex";
     getPrompt.style.display = "none";
   };
+
+  function skip() {
+    // Function to stop the current drawing and skip to the next
+    clearInterval(countdownId);
+    clearInterval(intervalId);
+    resetTimer();
+
+    var srcContext = srcCanvas.getContext('2d');
+    var stamp = new Image();
+    stamp.onload = function() {
+      srcContext.drawImage(stamp, 0, 0, srcCanvas.width, srcCanvas.height);
+    };
+    stamp.src = stampSrc;
+
+    delay(500).then(() => {
+      saveDrawing(mode="xmark");
+
+      doodleNr += 1;
+      prevGuess = '';
+      if (doodleNr===finAmount) {
+        giveFinalScreen();
+      }
+      else {
+        givePrompt();
+      };
+      resetChatbox();
+      clearCanvas();
+
+    });
+  }
 
   return (
     <section id="Hero" style={{height: "100vh"}}>
@@ -322,10 +396,10 @@ const Hero = () => {
           Start drawing
         </button>
       </Container>
-      <button className="button btn erase" id="clear" style={{visibility: "hidden", top: "-140px", left: "-300px"}} onClick={clearCanvas}>
+      <button className="button btn erase" id="clear" style={{visibility: "hidden", top: "-140px", left: "-240px"}} onClick={clearCanvas}>
         <i className="fa-solid fa-eraser"></i>
       </button>
-      <button className="button btn skip" id="skip" style={{visibility: "hidden", top: "-140px", left: "-280px"}}>
+      <button className="button btn skip" id="skip" style={{visibility: "hidden", top: "-140px", left: "-220px"}} onClick={skip}>
         <i className="fa-solid fa-arrow-right"></i>
       </button>
     </section>

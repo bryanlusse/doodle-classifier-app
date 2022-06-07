@@ -10,7 +10,6 @@ const Chatbox = () => {
         </div>
         <div className="middle">
         <div className="voldemort"> 
-        {/* need to check voldemort */}
             <div className="incoming"> 
             <div className="bubble">Hey, I'm going to guess what you are drawing</div>
             </div>

@@ -14,16 +14,6 @@ const Header = () => {
           </a>
         </div>
         <CountDownTimer/>
-        {/* <div className="nav-child" style={{width: "20%", height: "100%", marginBottom: "1%"}}>
-        <label className="switch" >
-            <input id="switch" type="checkbox" onClick={darkMode}/>
-            <span className="slider round"></span>
-            <div className="icons">
-            <SunIcon />
-            <MoonIcon />
-            </div>
-        </label>
-        </div> */}
     </div>
   );
 };

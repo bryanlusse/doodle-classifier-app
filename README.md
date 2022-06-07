@@ -14,7 +14,6 @@
 [Screenshots](#rice_scene-screenshot)
 •
 [URL](#computer-url)
-<!-- [Blogpost](https://medium.com/@blusse7/deploying-a-chatbot-on-heroku-using-flask-and-huggingface-7dadb77d8f48) -->
 </div>
 
 ## :bookmark_tabs: Menu
@@ -32,7 +31,8 @@ This web app enables users to draw doodles depending on a given prompt. A [deep 
 
 At the moment, 10 classes are supported. The prompt given for the drawings are therefore randomly drawn from these classes. The classes are: 'banana', 'calculator', 'cat', 'fish', 'hamburger', 'headphones', 'house', 'house plant', 'mushroom' and 'windmill'.
 
-Later updates will use more classes.
+UPDATE 07-06-2022:
+- Currently 30 classes are supported: 'apple', 'banana', 'basketball', 'cake', 'calculator', 'cat', 'chair', 'computer', 'cookie', 'crab', 'eye', 'fish', 'flower', 'hamburger', 'hat', 'pair of headphones', 'hockey stick', 'hourglass', 'house', 'house plant', 'mushroom', 'palm tree', 'pizza', 'potato', 'rainbow', 'spider', 'sword', 'syringe', 't-shirt', 'windmill'];
 
 ## :rice_scene: Screenshots
 Home screen:

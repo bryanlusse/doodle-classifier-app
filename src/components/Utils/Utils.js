@@ -10,10 +10,28 @@ export function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-export function argMax(array) {
-// Function to retrieve the index of the maximal value of 'array'. 
-  return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
-};
+export function getIndex(arr, value='biggest') {
+// Function to retrieve either the maximum value and its index from an array, 
+// or the second biggest value and its index from the same array.
+  let max = -Infinity, result = -Infinity, second = 0, index = 0;
+
+  for (const value of arr) {
+    const nr = Number(value);
+
+    if (nr > max) {
+      [second, max] = [max, nr] ;
+    } else if (nr < max && nr > result) {
+      second = nr; 
+    }
+  };
+	if (value==='biggest'){
+  	index = arr.indexOf(max);
+  }
+  if (value==='secondBiggest') {
+  	index = arr.indexOf(second);
+  }
+  return index;
+}
 
 export function RGBtoGray(pixels) {
 // Function to transform RGBA pixel information into Grayscale pixel information. 
