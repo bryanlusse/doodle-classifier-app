@@ -6,7 +6,7 @@ const Header = () => {
 
   return (
     <div className="header_navbar">
-        <div id="logo" className="nav-child" style={{width: "20%"}}>
+        <div id="logo" className="nav-child" style={{width: "20%", marginLeft: "20px"}}>
           <a href="./">
               <img className="logo" src={Image} alt="Doodle Classifier"/>
           </a>

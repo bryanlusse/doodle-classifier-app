@@ -38,6 +38,7 @@ body {
   text-align: center;
   background-color: var(--background-color);
   margin: 0px;
+  padding: 0px;
 }
 
 // MEDIA QUERY MANAGER
@@ -332,11 +333,11 @@ a:hover {
     text-align: center;
   }
   @include respond(phone) {
-    font-size: 2.5rem;
+    font-size: 3rem;
     height: 45px;
   }
   @include respond(phone-xs) {
-    font-size: 2rem;
+    font-size: 2.5rem;
     height: 40px;
   }
   // Responsive Button hero style
@@ -614,6 +615,7 @@ input:checked + .slider:before {
 
 .header_navbar nav-child{
   text-align: left;
+  margin-left: 20px;
 }
 
 .logo {
@@ -636,6 +638,17 @@ input:checked + .slider:before {
   z-index: 6;
   margin-left: 20px;
   display: none;
+
+  @include respond(phone) {
+    height: 40vh;
+    width: 80vw;
+  }
+  @include respond(phone-xs) {
+    height: 40vh;
+    width: 80vw;
+  }
+
+
 }
 
 .top-bar {

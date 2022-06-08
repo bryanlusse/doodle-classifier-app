@@ -130,15 +130,28 @@ const Hero = () => {
 
     dropdown.className = "dropup";
     delay(2000).then(() => dropdown.style.display = "none");
-    srcCanvas.style.display = "flex";
+    if (isDesktop) {
+      srcCanvas.style.display = "flex";
+      chatbox.style.display = "flex";
+    }
+    else {
+      srcCanvas.style.display = "inline-block";
+      chatbox.style.display = "inline-block";
+    }
+    
     clearButton.style.visibility = "visible";
     skipButton.style.visibility = "visible";
-    chatbox.style.display = "flex";
     context.fillStyle = "white";
     context.fillRect(0, 0, srcCanvas.width, srcCanvas.height);
 
     timer.style.visibility = "visible";
-    init() // Start possibility for drawing
+    if (isDesktop) {
+      init(18);
+    }
+    else {
+      init(10);
+    }
+    // Start possibility for drawing
     var isGuessing = window.setInterval(function(){
       prediction();
     }, 5000); // Predict class of drawing every 5 seconds
@@ -206,7 +219,12 @@ const Hero = () => {
     var imageData = srcContext.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
     
     newCanvas.getContext("2d").putImageData(imageData, 0, 0); 
-    destContext.scale(0.0555555, 0.0555555); // Scale data down to correct size for model.
+    if (isDesktop) {
+      destContext.scale(0.0555555, 0.0555555); // Scale data down to correct size for model.
+    }
+    else {
+      destContext.scale(0.1, 0.1); // Scale data down to correct size for model.
+    }
     destContext.drawImage(newCanvas, 0, 0); 
     
     var scaledImg = destContext.getImageData(0, 0, 28, 28).data;
@@ -218,7 +236,7 @@ const Hero = () => {
     if (gray.reduce((partialSum, a) => partialSum + a, 0) !== (255*28*28)) { // Check if drawing has started
       axios({
         method: 'post',
-        url: 'URL',
+        url: 'https://us-central1-doodle-classifier-350707.cloudfunctions.net/doodle-prediction', 
         data: {
           model_path: "projects/doodle-classifier-350707/models/doodle_classifier/versions/V2",
           instances: [result]
@@ -358,6 +376,29 @@ const Hero = () => {
       clearCanvas();
 
     });
+  };
+
+  let canvas, chatBox, canvStyle, button1, button2, finalcanvas1, finalcanvas2, finalcanvas3, br; // Do something if smaller than 280 or if low height
+  if (isDesktop) {
+    canvas = <canvas id="Canvas" width="504" height="504" style={{cursor: "url(../Imgs/pencil.png), auto", border: "2px solid black", display: "none"}}></canvas>;
+    chatBox = <Chatbox style={{display: "none", flex: "1"}}/>;
+    canvStyle = {display: "flex"};
+    button1 = {visibility: "hidden", top: "-140px", left: "-240px"};
+    button2 = {visibility: "hidden", top: "-140px", left: "-220px"};
+    finalcanvas1 = <canvas id="drawing1" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>
+    finalcanvas2 = <canvas id="drawing2" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>
+    finalcanvas3 = <canvas id="drawing3" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>
+    br = ''
+  } else {
+    canvas = <canvas id="Canvas" width="280" height="280" style={{cursor: "url(../Imgs/pencil.png), auto", border: "2px solid black", display: "none", marginTop: "30px", marginBottom: "80px", padding: "0px", transform: "translate(18,75%,0)"}}></canvas>;
+    chatBox = <Chatbox style={{display: "none", width: "100vw", height: "40vh", margin: "0px", padding: "0px"}}/>
+    canvStyle = {display: "inline-block", justifyContent: "center", alignItems: "center", textAlign:"center"};
+    button1 = {visibility: "hidden", top: "-55vh", margin: "10px"};
+    button2 = {visibility: "hidden", top: "-55vh", margin: "10px"};
+    finalcanvas1 = <canvas id="drawing1" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>
+    finalcanvas2 = <canvas id="drawing2" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>
+    finalcanvas3 = <canvas id="drawing3" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>
+    br = <br></br>
   }
 
   return (
@@ -375,9 +416,11 @@ const Hero = () => {
           <h1 style={{fontSize: "2em"}}> Well done! </h1>
           <p id="finalScore"></p>
           <div>
-            <canvas id="drawing1" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>
-            <canvas id="drawing2" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>
-            <canvas id="drawing3" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>
+            {finalcanvas1}
+            {br}
+            {finalcanvas2}
+            {br}
+            {finalcanvas3}
           </div>
           <div id="results" style={{paddingBottom: "20px"}}>
             <div id="result1div" className="one" >
@@ -394,21 +437,22 @@ const Hero = () => {
             Play again  
           </button>
         </div>
-        <canvas id="Canvas" width="504" height="504" style={{cursor: "url(../Imgs/pencil.png), auto", border: "2px solid black", display: "none"}}></canvas>
-        <Chatbox />
+        <div id = "canv-chat" style={canvStyle}>
+          {canvas}
+          {chatBox}
+        </div>
         <button id="getPrompt" className="cta-btn cta-btn--hero" onClick={givePrompt}>
           Start drawing
         </button>
       </Container>
-      <button className="button btn erase" id="clear" style={{visibility: "hidden", top: "-140px", left: "-240px"}} onClick={clearCanvas}>
+      <button className="button btn erase" id="clear" style={button1} onClick={clearCanvas}>
         <i className="fa-solid fa-eraser"></i>
       </button>
-      <button className="button btn skip" id="skip" style={{visibility: "hidden", top: "-140px", left: "-220px"}} onClick={skip}>
+      <button className="button btn skip" id="skip" style={button2} onClick={skip}>
         <i className="fa-solid fa-arrow-right"></i>
       </button>
     </section>
   );
 };
-
 
 export default Hero;
