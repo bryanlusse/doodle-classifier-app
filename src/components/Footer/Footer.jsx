@@ -18,7 +18,7 @@ const Footer = () => {
           </a>
           <a
             key='github'
-            href='https://github.com/bryanlusse/song-stats'
+            href='https://github.com/bryanlusse/doodle-classifier-app'
             rel="noopener noreferrer"
             target="_blank"
             aria-label='github'

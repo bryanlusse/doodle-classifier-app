@@ -83,7 +83,7 @@ const Hero = () => {
 
   const audio = new Audio(backgroundMusic);
   audio.loop = true;
-  audio.volume = 0.5;
+  audio.volume = 0.3;
   const confettiSound = new Audio(confettiPop);
   const clickSound = new Audio(click);
   var speaker = '';
