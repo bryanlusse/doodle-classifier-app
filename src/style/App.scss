@@ -58,9 +58,9 @@ ORDER: Base + Typography > Generar Layout + Grid > Page Layout > Components
 @mixin respond($breakpoint) {
   // Phone-xs
   @if $breakpoint == phone-xs {
-    @media (max-width: 20em) {
+    @media (max-height: 700px) {
       @content;
-    } //0 - 320px
+    } //0 - 700px
   }
   // Phone
   @if $breakpoint == phone {
@@ -626,6 +626,10 @@ input:checked + .slider:before {
 
 .canvas {
   float: left;
+
+  @include respond(phone-xs) {
+    margin-top: 15vh;
+  }
 }
 
 .chatbox {
@@ -636,16 +640,20 @@ input:checked + .slider:before {
   border-radius: 10px;
   box-shadow: 5px 5px 15px rgba($dark, 0.5);
   z-index: 6;
-  margin-left: 20px;
   display: none;
+  margin-left: 20px;
 
   @include respond(phone) {
     height: 40vh;
     width: 80vw;
+    margin-top: 20px;
+    margin-left: 0;
   }
   @include respond(phone-xs) {
-    height: 40vh;
+    height: 20vh;
     width: 80vw;
+    margin-top: 20px;
+    margin-left: 0;
   }
 
 
@@ -677,6 +685,10 @@ input:checked + .slider:before {
   top: 60px;
   height: 80%;
   overflow-x: scroll;
+
+  @include respond(phone-xs) {
+    height: 50%;
+  }
 }
 
 .incoming {
@@ -922,4 +934,16 @@ input:checked + .slider:before {
   padding-left: 10px;
   padding-right: 10px;
   font-size: 15px;
+}
+
+.p {
+  @include respond(phone-xs) {
+    margin: 0px;
+  }
+}
+
+.h1 {
+  @include respond(phone-xs) {
+    margin: 0px;
+  }
 }

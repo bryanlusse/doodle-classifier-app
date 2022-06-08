@@ -12,6 +12,9 @@ const Header = () => {
           </a>
         </div>
         <CountDownTimer/>
+        <div style={{width: "80%", right: "0px", textAlign: "right", marginRight: "10vw"}}>
+          <i id="speaker" className="fa-solid fa-volume-high fa-3x"></i>
+        </div>
     </div>
   );
 };

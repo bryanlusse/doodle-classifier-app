@@ -6,6 +6,10 @@ import Chatbox from '../Chatbox/Chatbox';
 import {delay, getIndex, RGBtoGray, createGroups, shuffle} from '../Utils/Utils';
 import {fireConfetti} from '../Utils/confetti';
 import stampSrc from "../Imgs/stamp.png";
+import Buttons from "../Canvas/Buttons"
+import backgroundMusic from "../Sounds/BackgroundMusic.mp3"
+import confettiPop from "../Sounds/confettiGun.mp3"
+import click from "../Sounds/click.wav"
 
 const classNames = ['an apple',
                     'a banana',
@@ -46,6 +50,7 @@ const Hero = () => {
   const [isDesktop, setIsDesktop] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [isMobile, setIsMobile] = useState(false);
+  const [isSmallMobile, setIsSmallMobile] = useState(false);
   const getPrompt = document.getElementById('getPrompt');
   const chatbox = document.getElementById('chatbox');
   const dropdown = document.getElementById('dropdown');
@@ -58,8 +63,8 @@ const Hero = () => {
   newCanvas.height = 504;
   const timer = document.getElementById('countdownTimer');
   const finalScore = document.getElementById("finalScore");
-  const clearButton = document.getElementById("clear");
-  const skipButton = document.getElementById("skip");
+  var clearButton = '';
+  var skipButton = '';
 
   const fincan1 = document.getElementById("drawing1");
   const fincan2 = document.getElementById("drawing2");
@@ -76,6 +81,13 @@ const Hero = () => {
   const result3 = document.getElementById("result3");
   const results = [result1, result2, result3];
 
+  const audio = new Audio(backgroundMusic);
+  audio.loop = true;
+  audio.volume = 0.5;
+  const confettiSound = new Audio(confettiPop);
+  const clickSound = new Audio(click);
+  var speaker = '';
+
   // inits for variables
   const finAmount = 3;
   // eslint-disable-next-line no-unused-vars
@@ -89,6 +101,34 @@ const Hero = () => {
   var correctNr = 0;
   var gameNr = 0;
   var prevGuess = '';
+  var mute = false;
+
+  // Function to be executed on loading of screen
+  function inits() {
+    clearButton = document.getElementById("clear");
+    skipButton = document.getElementById("skip");
+    skipButton.onclick = skip;
+
+    speaker = document.getElementById("speaker");
+    speaker.addEventListener('click', muteMusic);
+  };
+
+  // Function for stopping music
+  function muteMusic() {
+    if (mute) {
+      audio.play();
+      mute = false;
+      speaker.className= "fa-solid fa-volume-high fa-3x";
+    } else {
+      audio.pause();
+      audio.currentTime = 0; 
+      mute = true;
+      speaker.className= "fa-solid fa-volume-xmark fa-3x"
+    }     
+  };
+
+  // Add event listeners
+  window.addEventListener('load', inits)
 
   useEffect(() => {
     if (window.innerWidth > 769) {
@@ -97,10 +137,17 @@ const Hero = () => {
     } else {
       setIsMobile(true);
       setIsDesktop(false);
+      if (window.innerHeight < 700) {
+        setIsSmallMobile(true);
+      }
     }
   }, []);
 
   function givePrompt(reset="false") {
+    clickSound.play()
+    if (!mute) {
+      audio.play();
+    };
     // Get the random drawing prompt and serve it to the user in the dropdown
     if (reset === "true") {
       // Reset all variables when player chooses to start a new game
@@ -111,8 +158,7 @@ const Hero = () => {
       finalDropdown.className = "dropup";
       delay(2000).then(() => finalDropdown.style.display = "none");
       delay(2000).then(() => dropdown.style.display = "flex");
-    }
-    else {
+    } else {
       dropdown.style.display = "flex";
     };
 
@@ -125,6 +171,7 @@ const Hero = () => {
   }
 
   function startDrawing() {
+    clickSound.play()
     // Initializes drawing screen and canvas, and starts countdown and predictions
     const context = srcCanvas.getContext('2d');
 
@@ -133,8 +180,7 @@ const Hero = () => {
     if (isDesktop) {
       srcCanvas.style.display = "flex";
       chatbox.style.display = "flex";
-    }
-    else {
+    } else {
       srcCanvas.style.display = "inline-block";
       chatbox.style.display = "inline-block";
     }
@@ -147,8 +193,7 @@ const Hero = () => {
     timer.style.visibility = "visible";
     if (isDesktop) {
       init(18);
-    }
-    else {
+    } else {
       init(10);
     }
     // Start possibility for drawing
@@ -174,19 +219,16 @@ const Hero = () => {
         prevGuess = '';
         if (doodleNr===finAmount) {
           giveFinalScreen();
-        }
-        else {
+        } else {
           givePrompt();
         };
         resetChatbox();
         clearCanvas();
-      }
-      else {
+      } else {
         // Code for countdown timer look
         if (seconds < 10) {
           document.getElementById("timeRemaining").innerHTML = "0:0" + seconds;
-        }
-        else {
+        } else {
           document.getElementById("timeRemaining").innerHTML = "0:" + seconds;
         };
         
@@ -221,8 +263,7 @@ const Hero = () => {
     newCanvas.getContext("2d").putImageData(imageData, 0, 0); 
     if (isDesktop) {
       destContext.scale(0.0555555, 0.0555555); // Scale data down to correct size for model.
-    }
-    else {
+    } else {
       destContext.scale(0.1, 0.1); // Scale data down to correct size for model.
     }
     destContext.drawImage(newCanvas, 0, 0); 
@@ -236,7 +277,7 @@ const Hero = () => {
     if (gray.reduce((partialSum, a) => partialSum + a, 0) !== (255*28*28)) { // Check if drawing has started
       axios({
         method: 'post',
-        url: 'https://us-central1-doodle-classifier-350707.cloudfunctions.net/doodle-prediction', 
+        url: 'URL', 
         data: {
           model_path: "projects/doodle-classifier-350707/models/doodle_classifier/versions/V2",
           instances: [result]
@@ -269,6 +310,9 @@ const Hero = () => {
           incoming.appendChild(bubble);
 
           fireConfetti();
+          if (!mute) {
+            confettiSound.play();
+          }
           clearInterval(intervalId);
           clearInterval(countdownId);
           resetTimer();
@@ -283,16 +327,14 @@ const Hero = () => {
             if (doodleNr===3) {
               // Round is over, show scores:
               giveFinalScreen();
-            }
-            else {
+            } else {
               // Continue the round
               givePrompt();
             }
             resetChatbox();
             clearCanvas();
           }, 3000);
-        }
-        else {
+        } else {
           // Wrong guess
           bubble.innerHTML = "Is it " + currGuess + "?";
           incoming.appendChild(bubble);
@@ -341,6 +383,19 @@ const Hero = () => {
 
   function giveFinalScreen() {
     // Give final screen with score overview and saved drawings
+    clickSound.play()
+
+    const message = document.getElementById("message");
+    if (correctNr === 0) {
+      message.innerHTML = "Better luck next time";
+    } else if (correctNr === 1) {
+      message.innerHTML = "Well done";
+    } else if (correctNr === 2) {
+      message.innerHTML = "Great stuff!";
+    } else {
+      message.innerHTML = "Amazing, you are a true artist";
+    }
+
     finalScore.innerHTML = "Our neural network figured out " + correctNr + " of your " + finAmount + " drawings"; // Input final score
 
     finalDropdown.className = "dropdown";
@@ -350,6 +405,8 @@ const Hero = () => {
 
   function skip() {
     // Function to stop the current drawing and skip to the next
+    clickSound.play()
+
     clearInterval(countdownId);
     clearInterval(intervalId);
     resetTimer();
@@ -368,8 +425,7 @@ const Hero = () => {
       prevGuess = '';
       if (doodleNr===finAmount) {
         giveFinalScreen();
-      }
-      else {
+      } else {
         givePrompt();
       };
       resetChatbox();
@@ -378,27 +434,39 @@ const Hero = () => {
     });
   };
 
-  let canvas, chatBox, canvStyle, button1, button2, finalcanvas1, finalcanvas2, finalcanvas3, br; // Do something if smaller than 280 or if low height
+  let canvas, chatBox, canvStyle, finalcanvas1, finalcanvas2, finalcanvas3, br, buttonDivMob, buttonDiv, resultsPadding, margins1, margins2; // Do something if smaller than 280 or if low height
   if (isDesktop) {
     canvas = <canvas id="Canvas" width="504" height="504" style={{cursor: "url(../Imgs/pencil.png), auto", border: "2px solid black", display: "none"}}></canvas>;
-    chatBox = <Chatbox style={{display: "none", flex: "1"}}/>;
-    canvStyle = {display: "flex"};
-    button1 = {visibility: "hidden", top: "-140px", left: "-240px"};
-    button2 = {visibility: "hidden", top: "-140px", left: "-220px"};
-    finalcanvas1 = <canvas id="drawing1" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>
-    finalcanvas2 = <canvas id="drawing2" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>
-    finalcanvas3 = <canvas id="drawing3" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>
-    br = ''
+    chatBox = <Chatbox style={{display: "none", flex: "1", height: "504px"}}/>;
+    canvStyle = {display: "flex", alignItems: "center"};
+    finalcanvas1 = <canvas id="drawing1" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>;
+    finalcanvas2 = <canvas id="drawing2" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>;
+    finalcanvas3 = <canvas id="drawing3" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>;
+    br = '';
+    buttonDivMob = '';
+    buttonDiv = <Buttons />;
+    resultsPadding = {paddingBottom: "20px"};
+    margins1 = {fontSize: "2em"};
+    margins2 = {color: "black"};
   } else {
-    canvas = <canvas id="Canvas" width="280" height="280" style={{cursor: "url(../Imgs/pencil.png), auto", border: "2px solid black", display: "none", marginTop: "30px", marginBottom: "80px", padding: "0px", transform: "translate(18,75%,0)"}}></canvas>;
-    chatBox = <Chatbox style={{display: "none", width: "100vw", height: "40vh", margin: "0px", padding: "0px"}}/>
+    canvas = <canvas id="Canvas" width="280" height="280" style={{cursor: "url(../Imgs/pencil.png), auto", border: "2px solid black", display: "none", marginTop: "10vh", marginBottom: "20px"}}></canvas>;
+    chatBox = <Chatbox style={{display: "none", height: "40vh"}}/>;
     canvStyle = {display: "inline-block", justifyContent: "center", alignItems: "center", textAlign:"center"};
-    button1 = {visibility: "hidden", top: "-55vh", margin: "10px"};
-    button2 = {visibility: "hidden", top: "-55vh", margin: "10px"};
-    finalcanvas1 = <canvas id="drawing1" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>
-    finalcanvas2 = <canvas id="drawing2" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>
-    finalcanvas3 = <canvas id="drawing3" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>
-    br = <br></br>
+    finalcanvas1 = <canvas id="drawing1" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>;
+    finalcanvas2 = <canvas id="drawing2" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>;
+    finalcanvas3 = <canvas id="drawing3" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>;
+    br = <br></br>;
+    buttonDivMob = <Buttons />;
+    buttonDiv = '';
+    if (isSmallMobile) {
+      resultsPadding = {paddingBottom: "10px"};
+      margins1 = {fontSize: "2em", margin: "0px"};
+      margins2 = {margin: "0px"};
+    } else {
+      resultsPadding = {paddingBottom: "20px"};
+      margins1 = {fontSize: "2em"};
+      margins2 = {color: "black"};
+    }
   }
 
   return (
@@ -413,8 +481,8 @@ const Hero = () => {
           </button>
         </div>
         <div id='finalDropdown' className="dropdown" style={{display: "none", flexDirection: "column"}}>
-          <h1 style={{fontSize: "2em"}}> Well done! </h1>
-          <p id="finalScore"></p>
+          <h1 id="message" style={margins1}> Well done! </h1>
+          <p style={margins2} id="finalScore"></p>
           <div>
             {finalcanvas1}
             {br}
@@ -422,7 +490,7 @@ const Hero = () => {
             {br}
             {finalcanvas3}
           </div>
-          <div id="results" style={{paddingBottom: "20px"}}>
+          <div id="results" style={resultsPadding}>
             <div id="result1div" className="one" >
               <i id="result1"></i>
             </div>
@@ -437,20 +505,18 @@ const Hero = () => {
             Play again  
           </button>
         </div>
-        <div id = "canv-chat" style={canvStyle}>
-          {canvas}
-          {chatBox}
-        </div>
-        <button id="getPrompt" className="cta-btn cta-btn--hero" onClick={givePrompt}>
+        <div id = "mainScreen" style={{flexDirection: "column", alignItems: "center",  display: "flex"}}>
+          <div id = "canv-chat" style={canvStyle}>
+            {canvas}
+            {buttonDivMob}
+            {chatBox}
+          </div>
+          {buttonDiv}
+          <button id="getPrompt" className="cta-btn cta-btn--hero" onClick={givePrompt}>
           Start drawing
-        </button>
+          </button>
+        </div>
       </Container>
-      <button className="button btn erase" id="clear" style={button1} onClick={clearCanvas}>
-        <i className="fa-solid fa-eraser"></i>
-      </button>
-      <button className="button btn skip" id="skip" style={button2} onClick={skip}>
-        <i className="fa-solid fa-arrow-right"></i>
-      </button>
     </section>
   );
 };
