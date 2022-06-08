@@ -114,6 +114,7 @@ const Hero = () => {
   };
 
   // Function for stopping music
+  // eslint-disable-next-line
   function muteMusic() {
     if (mute) {
       audio.play();
@@ -436,7 +437,7 @@ const Hero = () => {
 
   let canvas, chatBox, canvStyle, finalcanvas1, finalcanvas2, finalcanvas3, br, buttonDivMob, buttonDiv, resultsPadding, margins1, margins2; // Do something if smaller than 280 or if low height
   if (isDesktop) {
-    canvas = <canvas id="Canvas" width="504" height="504" style={{cursor: "url(../Imgs/pencil.png), auto", border: "2px solid black", display: "none"}}></canvas>;
+    canvas = <canvas id="Canvas" width="504" height="504" style={{border: "2px solid black", display: "none"}}></canvas>;
     chatBox = <Chatbox style={{display: "none", flex: "1", height: "504px"}}/>;
     canvStyle = {display: "flex", alignItems: "center"};
     finalcanvas1 = <canvas id="drawing1" width="252" height="252" style={{paddingLeft: "10px", paddingRight: "10px"}}></canvas>;
@@ -449,7 +450,7 @@ const Hero = () => {
     margins1 = {fontSize: "2em"};
     margins2 = {color: "black"};
   } else {
-    canvas = <canvas id="Canvas" width="280" height="280" style={{cursor: "url(../Imgs/pencil.png), auto", border: "2px solid black", display: "none", marginTop: "10vh", marginBottom: "20px"}}></canvas>;
+    canvas = <canvas id="Canvas" width="280" height="280" style={{border: "2px solid black", display: "none", marginTop: "10vh", marginBottom: "20px"}}></canvas>;
     chatBox = <Chatbox style={{display: "none", height: "40vh"}}/>;
     canvStyle = {display: "inline-block", justifyContent: "center", alignItems: "center", textAlign:"center"};
     finalcanvas1 = <canvas id="drawing1" width="140" height="140" style={{paddingTop: "10px", paddingBottom: "10px"}}></canvas>;
