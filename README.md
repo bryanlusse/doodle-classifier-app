@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/doodle-classifier-app-logos.jpeg" alt="drawing" width="400"/> <br />
+<img src="assets/logo.jpg" alt="drawing" width="400"/> <br />
 
 # Doodle-classifier-app
 
